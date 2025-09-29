@@ -1,0 +1,142 @@
+version: '3.8'
+
+# MaisCash Workspace - Docker Compose
+# Este arquivo orquestra todos os serviços do workspace para desenvolvimento local
+
+services:
+  # Database
+  postgres:
+    image: postgres:15
+    container_name: maiscash-postgres
+    environment:
+      POSTGRES_DB: maiscash
+      POSTGRES_USER: maiscash
+      POSTGRES_PASSWORD: maiscash123
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./database/init:/docker-entrypoint-initdb.d
+    networks:
+      - maiscash-network
+
+  # Message Queue
+  artemis:
+    image: apache/activemq-artemis:2.30.0
+    container_name: maiscash-artemis
+    environment:
+      ARTEMIS_USER: artemis
+      ARTEMIS_PASSWORD: artemis123
+    ports:
+      - "61616:61616"  # JMS
+      - "8161:8161"    # Management Console
+    volumes:
+      - artemis_data:/var/lib/artemis-instance
+    networks:
+      - maiscash-network
+
+  # Redis (for caching)
+  redis:
+    image: redis:7-alpine
+    container_name: maiscash-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - maiscash-network
+
+  # Main Application (MaisCashPro)
+  maiscashpro:
+    build: ./services/MaisCashPro
+    container_name: maiscash-main
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/maiscash
+      SPRING_DATASOURCE_USERNAME: maiscash
+      SPRING_DATASOURCE_PASSWORD: maiscash123
+      SPRING_ARTEMIS_BROKER_URL: tcp://artemis:61616
+      SPRING_REDIS_HOST: redis
+      SPRING_REDIS_PORT: 6379
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgres
+      - artemis
+      - redis
+    networks:
+      - maiscash-network
+    profiles:
+      - full
+
+  # Consig1MS
+  consig1ms:
+    build: ./services/Consig1MS
+    container_name: maiscash-consig1ms
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/maiscash
+      SPRING_DATASOURCE_USERNAME: maiscash
+      SPRING_DATASOURCE_PASSWORD: maiscash123
+      SPRING_ARTEMIS_BROKER_URL: tcp://artemis:61616
+    ports:
+      - "8081:8080"
+    depends_on:
+      - postgres
+      - artemis
+    networks:
+      - maiscash-network
+    profiles:
+      - full
+
+  # Consig1CollectorsMS
+  consig1-collectors:
+    build: ./services/Consig1CollectorsMS
+    container_name: maiscash-collectors
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/maiscash
+      SPRING_DATASOURCE_USERNAME: maiscash
+      SPRING_DATASOURCE_PASSWORD: maiscash123
+      SPRING_ARTEMIS_BROKER_URL: tcp://artemis:61616
+    ports:
+      - "8082:8080"
+    depends_on:
+      - postgres
+      - artemis
+      - consig1ms
+    networks:
+      - maiscash-network
+    profiles:
+      - full
+
+  # Frontend (MaiscashPro-Frontend)
+  frontend:
+    build:
+      context: ./frontend/MaiscashPro-Frontend
+      dockerfile: Dockerfile
+    container_name: maiscash-frontend
+    ports:
+      - "9000:80"
+    networks:
+      - maiscash-network
+    profiles:
+      - full
+
+volumes:
+  postgres_data:
+  artemis_data:
+  redis_data:
+
+networks:
+  maiscash-network:
+    driver: bridge
+
+# Para usar apenas a infraestrutura (DB, Artemis, Redis):
+# docker-compose up postgres artemis redis
+#
+# Para usar todos os serviços:
+# docker-compose --profile full up
+#
+# Para development (sem os serviços Java rodando no Docker):
+# docker-compose up postgres artemis redis

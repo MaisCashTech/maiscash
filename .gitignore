@@ -1,0 +1,52 @@
+# MaisCash Workspace .gitignore
+
+# Local configuration files
+.maiscash-config
+.env.local
+
+# IDE specific files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS specific files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/
+
+# Temporary files
+.tmp/
+temp/
+
+# Docker
+docker-compose.override.yml
+
+# Node modules (should be in submodules, but just in case)
+node_modules/
+
+# Maven target directories (should be in submodules, but just in case)
+target/
+
+# Coverage reports
+coverage/
+*.lcov
+
+# Local database files
+*.db
+*.sqlite
+
+# SSH keys or secrets (if any are accidentally placed here)
+*.pem
+*.key
+id_rsa*
+
+# Backup files
+*.backup
+*.bak
+
+# Local scripts or tools
+local-scripts/

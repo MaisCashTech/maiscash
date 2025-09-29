@@ -1,0 +1,42 @@
+[submodule "services/MaisCashPro"]
+	path = services/MaisCashPro
+	url = git@github.com:MaisCashTech/MaisCashPro.git
+[submodule "services/Consig1MS"]
+	path = services/Consig1MS
+	url = git@github.com:ON3-Solutions/Consig1MS.git
+[submodule "services/Consig1CollectorsMS"]
+	path = services/Consig1CollectorsMS
+	url = git@github.com:ON3-Solutions/Consig1CollectorsMS.git
+[submodule "services/Consig1ExportMS"]
+	path = services/Consig1ExportMS
+	url = git@github.com:ON3-Solutions/Consig1ExportMS.git
+[submodule "services/Consig1ImportMS"]
+	path = services/Consig1ImportMS
+	url = git@github.com:ON3-Solutions/Consig1ImportMS.git
+[submodule "services/AuthorizationMS"]
+	path = services/AuthorizationMS
+	url = git@github.com:ON3-Solutions/AuthorizationMS.git
+[submodule "services/UserMS"]
+	path = services/UserMS
+	url = git@github.com:ON3-Solutions/UserMS.git
+[submodule "services/extrato"]
+	path = services/extrato
+	url = git@github.com:MaisCashTech/extrato.git
+[submodule "frontend/MaiscashPro-Frontend"]
+	path = frontend/MaiscashPro-Frontend
+	url = git@github.com:MaisCashTech/MaiscashPro-Frontend.git
+[submodule "frontend/consig1-dashboard"]
+	path = frontend/consig1-dashboard
+	url = git@github.com:MaisCashTech/consig1-dashboard.git
+[submodule "common/consig1"]
+	path = common/consig1
+	url = git@github.com:MaisCashTech/consig1.git
+[submodule "common/asteba"]
+	path = common/asteba
+	url = git@github.com:MaisCashTech/asteba.git
+[submodule "legacy/consig1-angular"]
+	path = legacy/consig1-angular
+	url = git@github.com:ON3-Solutions/consig1-angular.git
+[submodule "legacy/consig1-secrets"]
+	path = legacy/consig1-secrets
+	url = git@github.com:MaisCashTech/consig1-secrets.git
