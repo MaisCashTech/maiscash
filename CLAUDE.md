@@ -131,13 +131,67 @@ ng serve                  # Servidor de desenvolvimento
 ng build                 # Build de produção
 ```
 
+## 🔄 Fluxo de Dados Entre Serviços
+
+### Pipeline de Coleta de Empréstimos GovBahia
+
+Este é o fluxo end-to-end para consulta de empréstimos de funcionários públicos da Bahia:
+
+```
+1. [Usuário] → [Consig1MS UI]
+   Solicita consulta de CPF via WebSocket
+
+2. [Consig1MS] → [Fila: Collection Queues]
+   Envia CPF para filas de coleta
+
+3. [Consig1CollectorsMS] → [extrato REST API]
+   ExtratoService chama GET /api/{cpf}
+
+4. [extrato] → [GovBahia ConsigLog Portal]
+   Web scraping do portal do governo
+
+5. [extrato] → [Consig1CollectorsMS]
+   Retorna JSON estruturado (GovBahia DTO)
+
+6. [Consig1CollectorsMS] → [Fila: DATABASE_OPERATIONS_QUEUE]
+   Envia mensagem: "6-{json}" (operação CREATE_UPDATE_DELETE_GOV_BAHIA)
+
+7. [Consig1MS] → [PostgreSQL Consig1MS]
+   DatabaseOperationsService persiste dados
+
+8. [Consig1MS] → [Fila Artemis: op_extrato]
+   Publica mesma mensagem para MaisCashPro
+
+9. [MaisCashPro] → [PostgreSQL MaisCashPro]
+   ExtratoServiceTask consome e persiste empréstimos
+```
+
+### Serviços e suas Responsabilidades
+
+| Serviço | Função | Banco de Dados | Message Queue |
+|---------|--------|---------------|---------------|
+| **Consig1MS** | Orquestração, UI, coordenação | ✅ PostgreSQL | ✅ Producer/Consumer |
+| **Consig1CollectorsMS** | Execução de web scraping | ❌ Stateless | ✅ Consumer → Producer |
+| **extrato** | Scraper GovBahia (REST API) | ✅ PostgreSQL (tokens) | ❌ REST only |
+| **MaisCashPro** | Aplicação final para clientes | ✅ PostgreSQL | ✅ Consumer |
+
+### Filas Apache Artemis
+
+| Fila | Producer | Consumer | Conteúdo |
+|------|----------|----------|----------|
+| `DATABASE_OPERATIONS_QUEUE` | Consig1CollectorsMS | Consig1MS | Operações de persistência |
+| `op_extrato` | Consig1MS | MaisCashPro | Dados GovBahia para clientes |
+| `op_associacoes` | Consig1MS | MaisCashPro | Empréstimos de associações |
+| `*-ERROR` | Todos | (manual) | Mensagens falhadas |
+
 ## 📞 Domínio de Negócio
 
 **Função Principal**: Sistema de consulta de empréstimos consignados para funcionários do estado da Bahia
 - **Consultas por CPF**: Interface "Pesquisa por CPF" para consulta de empréstimos
 - **Processamento via Mensagens**: Sistema assíncrono usando Apache Artemis
-- **Integração Externa**: Conexão direta com sistemas de folha de pagamento da Bahia
+- **Integração Externa**: Conexão direta com sistemas de folha de pagamento da Bahia (GovBahia ConsigLog)
 - **Processamento em Tempo Real**: Coleta e processamento assíncrono de dados
+- **Dual Persistence**: Dados armazenados tanto no Consig1MS (histórico) quanto no MaisCashPro (cliente)
 
 ## 🏗️ Padrões Arquiteturais
 
