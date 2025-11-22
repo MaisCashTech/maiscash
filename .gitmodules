@@ -40,3 +40,6 @@
 [submodule "legacy/consig1-secrets"]
 	path = legacy/consig1-secrets
 	url = git@github.com:MaisCashTech/consig1-secrets.git
+[submodule ".claude"]
+	path = .claude
+	url = git@github.com:phamhung075/4genthub-hooks.git

@@ -1,0 +1,28 @@
+{
+  "version": "1.0.0",
+  "last_updated": "2025-11-22",
+  "description": "AI Documentation Index for MaisCash Project",
+  "categories": {
+    "flows": {
+      "description": "Data flows and integration patterns",
+      "documents": [
+        {
+          "id": "extrato-flow",
+          "title": "Fluxo do Extrato - Empréstimos Consignados GovBahia",
+          "path": "ai_docs/flows/extrato-flow.md",
+          "summary": "Complete flow from user CPF input to data persistence in Consig1MS and MaisCashPro",
+          "tags": ["extrato", "scraping", "artemis", "govbahia", "message-queue"],
+          "created": "2025-11-22",
+          "updated": "2025-11-22"
+        }
+      ]
+    },
+    "architecture": {
+      "description": "System architecture and design decisions",
+      "documents": []
+    }
+  },
+  "quick_reference": {
+    "extrato": "ai_docs/flows/extrato-flow.md"
+  }
+}
