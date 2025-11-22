@@ -50,3 +50,10 @@ id_rsa*
 
 # Local scripts or tools
 local-scripts/
+
+# Claude Code - MCP configuration with secrets
+.mcp.json
+# Claude Code - Local settings with machine-specific paths
+.claude/settings.json
+# Claude Code - Environment variables
+.env.claude
