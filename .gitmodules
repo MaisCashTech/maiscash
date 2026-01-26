@@ -36,7 +36,7 @@
 	url = git@github.com:MaisCashTech/asteba.git
 [submodule "legacy/consig1-angular"]
 	path = legacy/consig1-angular
-	url = git@github.com:ON3-Solutions/consig1-angular.git
+	url = git@github.com:MaisCashTech/consig1-angular.git
 [submodule "legacy/consig1-secrets"]
 	path = legacy/consig1-secrets
 	url = git@github.com:MaisCashTech/consig1-secrets.git
