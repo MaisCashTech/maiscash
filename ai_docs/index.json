@@ -20,9 +20,25 @@
     "architecture": {
       "description": "System architecture and design decisions",
       "documents": []
+    },
+    "authorization": {
+      "description": "Role-based authorization flows and security patterns",
+      "documents": [
+        {
+          "id": "emprestimos-authorization",
+          "title": "Autorizacao de Emprestimos por Papel de Usuario",
+          "path": "docs/emprestimos-authorization.md",
+          "summary": "Role-based authorization flow for the loans menu (ADM/SUPERVISOR/OPERADOR), frontend role detection, backend security check in CustomEmprestimoService, and fix history for Issue #38",
+          "tags": ["authorization", "emprestimos", "operador", "supervisor", "angular", "security", "issue-38"],
+          "created": "2026-03-13",
+          "updated": "2026-03-13"
+        }
+      ]
     }
   },
   "quick_reference": {
-    "extrato": "ai_docs/flows/extrato-flow.md"
+    "extrato": "ai_docs/flows/extrato-flow.md",
+    "emprestimos-auth": "docs/emprestimos-authorization.md",
+    "loans-authorization": "docs/emprestimos-authorization.md"
   }
 }
