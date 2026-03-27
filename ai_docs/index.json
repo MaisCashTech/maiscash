@@ -1,44 +1,49 @@
 {
-  "version": "1.0.0",
-  "last_updated": "2025-11-22",
-  "description": "AI Documentation Index for MaisCash Project",
+  "absolute_docs": {
+    "obsolete_docs": [],
+    "tracked_files": {}
+  },
   "categories": {
-    "flows": {
-      "description": "Data flows and integration patterns",
-      "documents": [
+    "architecture": {
+      "count": 1,
+      "files": [
         {
-          "id": "extrato-flow",
-          "title": "Fluxo do Extrato - Empréstimos Consignados GovBahia",
-          "path": "ai_docs/flows/extrato-flow.md",
-          "summary": "Complete flow from user CPF input to data persistence in Consig1MS and MaisCashPro",
-          "tags": ["extrato", "scraping", "artemis", "govbahia", "message-queue"],
-          "created": "2025-11-22",
-          "updated": "2025-11-22"
+          "hash": "1b076f66d93c5a1b18676fc04f416d97",
+          "modified": "2026-03-27T10:55:31.115077",
+          "name": "postgresql-infrastructure.md",
+          "path": "architecture/postgresql-infrastructure.md",
+          "size": 3861
         }
+      ],
+      "path": "architecture"
+    },
+    "flows": {
+      "count": 1,
+      "files": [
+        {
+          "hash": "686cd59f8b8a8c2cbe0b17024b33edff",
+          "modified": "2026-03-27T10:55:31.115423",
+          "name": "extrato-flow.md",
+          "path": "flows/extrato-flow.md",
+          "size": 8656
+        }
+      ],
+      "path": "flows"
+    }
+  },
+  "generated_at": "2026-03-27T10:55:48.985049",
+  "structure": {
+    "architecture": {
+      "files": [
+        "postgresql-infrastructure.md"
       ]
     },
-    "architecture": {
-      "description": "System architecture and design decisions",
-      "documents": []
-    },
-    "authorization": {
-      "description": "Role-based authorization flows and security patterns",
-      "documents": [
-        {
-          "id": "emprestimos-authorization",
-          "title": "Autorizacao de Emprestimos por Papel de Usuario",
-          "path": "docs/emprestimos-authorization.md",
-          "summary": "Role-based authorization flow for the loans menu (ADM/SUPERVISOR/OPERADOR), frontend role detection, backend security check in CustomEmprestimoService, and fix history for Issue #38",
-          "tags": ["authorization", "emprestimos", "operador", "supervisor", "angular", "security", "issue-38"],
-          "created": "2026-03-13",
-          "updated": "2026-03-13"
-        }
+    "flows": {
+      "files": [
+        "extrato-flow.md"
       ]
     }
   },
-  "quick_reference": {
-    "extrato": "ai_docs/flows/extrato-flow.md",
-    "emprestimos-auth": "docs/emprestimos-authorization.md",
-    "loans-authorization": "docs/emprestimos-authorization.md"
-  }
+  "total_directories": 2,
+  "total_files": 2
 }
