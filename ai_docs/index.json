@@ -1,28 +1,49 @@
 {
-  "version": "1.0.0",
-  "last_updated": "2025-11-22",
-  "description": "AI Documentation Index for MaisCash Project",
+  "absolute_docs": {
+    "obsolete_docs": [],
+    "tracked_files": {}
+  },
   "categories": {
-    "flows": {
-      "description": "Data flows and integration patterns",
-      "documents": [
-        {
-          "id": "extrato-flow",
-          "title": "Fluxo do Extrato - Empréstimos Consignados GovBahia",
-          "path": "ai_docs/flows/extrato-flow.md",
-          "summary": "Complete flow from user CPF input to data persistence in Consig1MS and MaisCashPro",
-          "tags": ["extrato", "scraping", "artemis", "govbahia", "message-queue"],
-          "created": "2025-11-22",
-          "updated": "2025-11-22"
-        }
-      ]
-    },
     "architecture": {
-      "description": "System architecture and design decisions",
-      "documents": []
+      "count": 1,
+      "files": [
+        {
+          "hash": "1b076f66d93c5a1b18676fc04f416d97",
+          "modified": "2026-03-26T15:23:59.804409",
+          "name": "postgresql-infrastructure.md",
+          "path": "architecture/postgresql-infrastructure.md",
+          "size": 3861
+        }
+      ],
+      "path": "architecture"
+    },
+    "flows": {
+      "count": 1,
+      "files": [
+        {
+          "hash": "0a0d51b8448d2991b304c6a410e2426b",
+          "modified": "2025-11-22T10:02:26.922954",
+          "name": "extrato-flow.md",
+          "path": "flows/extrato-flow.md",
+          "size": 4423
+        }
+      ],
+      "path": "flows"
     }
   },
-  "quick_reference": {
-    "extrato": "ai_docs/flows/extrato-flow.md"
-  }
+  "generated_at": "2026-03-26T15:23:59.879240",
+  "structure": {
+    "architecture": {
+      "files": [
+        "postgresql-infrastructure.md"
+      ]
+    },
+    "flows": {
+      "files": [
+        "extrato-flow.md"
+      ]
+    }
+  },
+  "total_directories": 2,
+  "total_files": 2
 }
