@@ -46,3 +46,6 @@
 [submodule "infra/devops"]
 	path = infra/devops
 	url = git@github.com:MaisCashTech/devops.git
+[submodule "services/digitador"]
+	path = services/digitador
+	url = git@github.com:MaisCashTech/digitador.git
