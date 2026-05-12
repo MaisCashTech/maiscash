@@ -194,6 +194,24 @@ SPRING_DATA_REDIS_HOST=localhost
 
 ---
 
+## 🔄 CI/CD — Jenkins MaisCash
+
+- **URL**: https://jenkins.consig1.com.br
+- **Padrão de nome de job**: `<servico> - build and deploy` (ex: `extrato - build and deploy`)
+- **Credenciais de API e setup completo**: `infra/devops/infra/jenkins/api-tokens.md` (submódulo `MaisCashTech/devops`)
+- **Convenção de Jenkinsfile**: `agent { label 'built-in' }` + `discordSend` no `post.always` via credencial `discord-webhook-devops`
+- **Trigger automático**: GitHub push (todos os jobs usam `GitHubPushTrigger`)
+- **Monitoramento**: Dozzle (`https://dozzle.consig1.com.br/`) e Portainer (`https://portainer.consig1.com.br/`)
+
+```bash
+# Listar jobs (substituir <token> pelo token de api-tokens.md)
+curl -u 'jesus:<token>' "https://jenkins.consig1.com.br/api/json?tree=jobs\[name\]"
+```
+
+⚠️ **NÃO confundir** com o Jenkins da UAN (`jenkins.gedocflex.com.br`) — são empresas diferentes.
+
+---
+
 ## 📋 Development Rules
 
 ### Language

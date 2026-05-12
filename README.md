@@ -51,6 +51,11 @@ maiscash/
 - [CLAUDE.md](./CLAUDE.md) - Guia completo para Claude Code
 - [Arquitetura](./docs/architecture.md) - Visão geral da arquitetura
 - [Setup Desenvolvimento](./docs/development-setup.md) - Configuração do ambiente
+- [Infra & DevOps](./infra/devops/README.md) - Jenkins, Nginx, Artemis, Postgres, Metabase
+
+## 🔄 CI/CD
+
+Jenkins MaisCash: **https://jenkins.consig1.com.br** — credenciais e padrões em [`infra/devops/infra/jenkins/`](./infra/devops/infra/jenkins/).
 
 ## 🔧 Tecnologias
 
