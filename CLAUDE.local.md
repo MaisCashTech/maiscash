@@ -199,7 +199,7 @@ SPRING_DATA_REDIS_HOST=localhost
 - **URL**: https://jenkins.consig1.com.br
 - **Padrão de nome de job**: `<servico> - build and deploy` (ex: `extrato - build and deploy`)
 - **Credenciais de API e setup completo**: `infra/devops/infra/jenkins/api-tokens.md` (submódulo `MaisCashTech/devops`)
-- **Convenção de Jenkinsfile**: `agent { label 'built-in' }` + `discordSend` no `post.always` via credencial `discord-webhook-devops`
+- **Convenção de Jenkinsfile**: `agent { label 'built-in' }`. Notificação Discord (`discordSend`) é opcional — se for usar, confirme antes que a credencial `discord-webhook-devops` existe no Jenkins (verifique em `https://jenkins.consig1.com.br/credentials/`).
 - **Trigger automático**: GitHub push (todos os jobs usam `GitHubPushTrigger`)
 - **Monitoramento**: Dozzle (`https://dozzle.consig1.com.br/`) e Portainer (`https://portainer.consig1.com.br/`)
 
