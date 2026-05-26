@@ -1,8 +1,5 @@
 pipeline {
     agent { label 'built-in' }
-    environment {
-        DISCORD_WEBHOOK = credentials('discord-webhook-devops')
-    }
 
     stages {
         stage('Deploy Redis') {
@@ -25,8 +22,7 @@ pipeline {
     }
     post {
         always {
-                        deleteDir()
-discordSend description: "Build: " + env.BUILD_NUMBER + "\nStatus: " + currentBuild.currentResult, link: env.BUILD_URL, result: currentBuild.currentResult, title: JOB_NAME + " #" + env.BUILD_NUMBER, webhookURL: env.DISCORD_WEBHOOK
+            deleteDir()
         }
     }
 }
