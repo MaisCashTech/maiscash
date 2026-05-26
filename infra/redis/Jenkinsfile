@@ -1,0 +1,32 @@
+pipeline {
+    agent { label 'built-in' }
+    environment {
+        DISCORD_WEBHOOK = credentials('discord-webhook-devops')
+    }
+
+    stages {
+        stage('Deploy Redis') {
+            steps {
+                sh 'docker rm $(docker stop $(docker ps -a -q --filter name=redis --format="{{.ID}}")) || true'
+                sh '''docker run --name redis -d \
+                    --network consig1 \
+                    --restart unless-stopped \
+                    -v redis-data:/data \
+                    -p 6379:6379 \
+                    redis:7 \
+                    redis-server --appendonly yes --maxmemory 256mb --maxmemory-policy allkeys-lru'''
+            }
+        }
+        stage('Health Check') {
+            steps {
+                sh 'sleep 3 && docker exec redis redis-cli ping'
+            }
+        }
+    }
+    post {
+        always {
+                        deleteDir()
+discordSend description: "Build: " + env.BUILD_NUMBER + "\nStatus: " + currentBuild.currentResult, link: env.BUILD_URL, result: currentBuild.currentResult, title: JOB_NAME + " #" + env.BUILD_NUMBER, webhookURL: env.DISCORD_WEBHOOK
+        }
+    }
+}
