@@ -91,8 +91,9 @@ HTTP 503 com JSON `{"status":"unavailable"}`. Isso não indica saúde do backend
 a API ainda precisa ser implantada, e `/actuator/health` deve passar a refletir
 seu estado real após o primeiro deploy.
 
-A configuração aplicada e o manual `infra/nginx/MAVIPAY.md` estão na
-[PR DevOps #6](https://github.com/MaisCashTech/devops/pull/6), para revisão.
+A configuração aplicada e o manual `infra/nginx/MAVIPAY.md` estão no submódulo
+DevOps, incorporados pela [PR #6](https://github.com/MaisCashTech/devops/pull/6)
+já mesclada. O ponteiro do monorepo inclui essa configuração.
 Não é necessário NGINX ou certificado para o Redis, que continua interno.
 
 ## Operação do Redis
