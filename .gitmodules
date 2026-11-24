@@ -49,3 +49,6 @@
 [submodule "services/digitador-rpa"]
 	path = services/digitador-rpa
 	url = git@github.com:MaisCashTech/digitador-rpa.git
+[submodule "services/mavipay"]
+	path = services/mavipay
+	url = git@github.com:MaisCashTech/mavipay.git

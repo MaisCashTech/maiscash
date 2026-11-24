@@ -24,6 +24,7 @@ maiscash/
 │   ├── MaisCashPro/           # App principal (JHipster)
 │   ├── Consig1MS/             # Core - consultas consignado
 │   ├── Consig1CollectorsMS/   # Coleta de dados
+│   ├── mavipay/              # Backend api-mobile (Java 21) e app Expo
 │   ├── extrato/               # Consulta funcionários BA
 │   └── ...
 ├── frontend/           # Aplicações Frontend
@@ -56,6 +57,21 @@ maiscash/
 ## 🔄 CI/CD
 
 Jenkins MaisCash: **https://jenkins.consig1.com.br** — credenciais e padrões em [`infra/devops/infra/jenkins/`](./infra/devops/infra/jenkins/).
+
+### MaviPay
+
+O submódulo [`services/mavipay`](https://github.com/MaisCashTech/mavipay) contém
+`api-mobile/` (backend Java 21) e `maiscash-app/` (Expo). O Jenkins compila apenas
+`api-mobile/`, usando o `Jenkinsfile` da raiz e JDK 21 dentro do Docker.
+
+- Job: [mavipay - build and deploy](https://jenkins.consig1.com.br/job/mavipay%20-%20build%20and%20deploy/).
+- Setup, credenciais e operação: `services/mavipay/docs/DEPLOY.md`.
+- Desenvolvimento: `cd services/mavipay/api-mobile && ./mvnw test` (JDK 21).
+- Os scripts genéricos do workspace procuram Maven na raiz de cada serviço;
+  execute o backend nesta subpasta ou use o job dedicado.
+- Antes do primeiro deploy, cadastrar `maiscash-api-mobile-env` no Jenkins e
+  disponibilizar PostgreSQL/Redis. A API usa `127.0.0.1:7920` no host; a publicação
+  HTTPS requer a definição do domínio e certificado no NGINX.
 
 ## 🔧 Tecnologias
 
