@@ -24,7 +24,7 @@ maiscash/
 │   ├── MaisCashPro/           # App principal (JHipster)
 │   ├── Consig1MS/             # Core - consultas consignado
 │   ├── Consig1CollectorsMS/   # Coleta de dados
-│   ├── mavipay/              # Backend api-mobile (Java 21) e app Expo
+│   ├── mavipay/               # Backend api-mobile (Java 21) e app Expo
 │   ├── extrato/               # Consulta funcionários BA
 │   └── ...
 ├── frontend/           # Aplicações Frontend
@@ -35,7 +35,7 @@ maiscash/
 │   └── asteba/                # Integrações ASTEBA
 ├── legacy/             # Projetos legados
 ├── scripts/            # Scripts de automação
-└── docs/              # Documentação consolidada
+└── docs/               # Documentação consolidada
 ```
 
 ## 🛠️ Scripts Disponíveis
