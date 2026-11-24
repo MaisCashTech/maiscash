@@ -8,12 +8,12 @@ de cada componente.
 
 | Recurso | Situação |
 |---|---|
-| PostgreSQL | Base `mavipay` e usuário `mavipay_app` criados no `mct-main`; sem tabelas de aplicação, aguardando primeiro Flyway |
+| PostgreSQL | Base `mavipay`, usuário `mavipay_app` e 20 migrations Flyway aplicadas com sucesso |
 | Redis | Instalado e saudável, com instalação e reinstalação pelo Jenkins validadas |
 | Credenciais Jenkins | `redis-password` e `maiscash-api-mobile-env` cadastradas |
-| Backend MaviPay | Job criado; nenhum deploy disparado durante este provisionamento |
-| WhatsApp/ChatGuru e SMTP | Valores reais de produção pendentes |
-| HTTPS da API | `https://mavipay.consig1.com.br`, certificado e proxy NGINX configurados; HTTP 503 até o backend estar disponível |
+| Backend MaviPay | Implantado pelo build #3; health HTTPS 200/UP e endpoint protegido 401 sem token |
+| WhatsApp/ChatGuru e SMTP | ChatGuru configurado; SMTP opcional para WhatsApp, pendente para alternativa por e-mail |
+| HTTPS da API | `https://mavipay.consig1.com.br`, TLS válido e health check HTTP 200/UP |
 
 ## Jobs Jenkins
 
@@ -24,9 +24,21 @@ Usar exclusivamente o Jenkins MaisCashTech: **https://jenkins.consig1.com.br**.
 | [redis - install and deploy](https://jenkins.consig1.com.br/job/redis%20-%20install%20and%20deploy/) | `MaisCashTech/redis`, `*/main`, `Jenkinsfile` da raiz | Instalar/reinstalar Redis no `mct-main` |
 | [mavipay - build and deploy](https://jenkins.consig1.com.br/job/mavipay%20-%20build%20and%20deploy/) | `MaisCashTech/mavipay`, `*/main`, `Jenkinsfile` da raiz | Build Docker de `api-mobile/` e deploy do backend |
 
-Ambos utilizam agente `built-in`, credencial SSH `GitHub` para checkout e execução
-manual, sem webhook ou agendamento configurado. Instalar Redis não dispara o job
-do backend. O app Expo tem publicação separada via EAS.
+Ambos utilizam agente `built-in` e credencial SSH `GitHub` para checkout. Redis
+permanece manual, sem webhook ou agendamento. MaviPay tem GitHubPushTrigger ativo
+e webhook de push para `https://jenkins.consig1.com.br/github-webhook/`, com TLS
+verificado e ping entregue com HTTP 200. O job foi restaurado para `*/main` após
+o primeiro deploy. Não há cron; novos commits na main são detectados pelo SCM.
+
+A [PR MaviPay #26](https://github.com/MaisCashTech/mavipay/pull/26) versiona o
+trigger e corrige a variável opcional `EXTRA_NETWORK` omitida pelo Jenkins quando
+vazia. O deploy inicial bem-sucedido usou a branch dessa correção (commit
+`9be8b9c`); mesclar a PR antes dos próximos deploys da main. O build #1 compilou,
+mas abortou antes de criar container pela variável ausente; o #2 falhou ao buscar
+um SHA com checkout lightweight. O #3 aplicou as migrations e passou no health.
+
+O webhook não aguarda GitHub Actions: gates devem estar na proteção de branch.
+Instalar Redis não dispara o job do backend. O app Expo tem publicação separada via EAS.
 
 Redis: [build #1](https://jenkins.consig1.com.br/job/redis%20-%20install%20and%20deploy/1/)
 e [build #2](https://jenkins.consig1.com.br/job/redis%20-%20install%20and%20deploy/2/)
@@ -41,9 +53,14 @@ TTL/GETDEL, persistência após restart e ausência de portas publicadas no host
 | `redis-password` | Secret text | Senha Redis, 64 caracteres hexadecimais |
 | `maiscash-api-mobile-env` | Secret file | Variáveis de produção do backend |
 
-O Secret file contém a conexão PostgreSQL, Redis e chaves JWT/AES/HMAC geradas para
-o primeiro ambiente. As credenciais de ChatGuru e SMTP continuam vazias; cadastrar
-o arquivo não torna esses fluxos operacionais.
+O Secret file contém PostgreSQL, Redis, chaves JWT/AES/HMAC e os dados ChatGuru
+fornecidos em arquivo pelo usuário. `CHATGURU_CODE_DIALOG_ID` foi mantido vazio;
+a implementação utiliza texto livre nesse caso. Não foi enviado WhatsApp real.
+
+SMTP permanece sem credenciais. O código implementa a alternativa por e-mail,
+inclusive a opção “Usar e-mail” no app, mas o fluxo WhatsApp não depende de SMTP
+e o health check de mail é desabilitado em prod. Não anunciar o canal de e-mail
+como operacional antes de configurá-lo ou desabilitá-lo no produto.
 
 | Variável | Valor de integração, sem segredos |
 |---|---|
@@ -62,20 +79,26 @@ backend) e `/etc/mavipay/database.env` (somente banco), arquivos root:root 0600,
 diretório 0700. Não versionar, imprimir em logs ou incluir em PRs. Preserve as
 chaves AES/HMAC após entrada de dados; substituí-las afeta os CPFs já armazenados.
 
-## Antes do primeiro deploy MaviPay
+## Primeiro deploy e próximos testes
 
-1. Confirmar PostgreSQL e Redis acessíveis pela rede `consig1` e os valores do
-   Secret file. As 20 migrations foram testadas em transação com ROLLBACK; o
-   primeiro Flyway deve criar o histórico e as tabelas, sem aplicação manual dos SQLs.
-2. Completar as credenciais reais de ChatGuru/WhatsApp e SMTP e validar o envio
-   utilizado por cadastro e autenticação.
-3. Confirmar o acesso a `https://mavipay.consig1.com.br`. O proxy para
-   `127.0.0.1:7920` e o certificado já estão configurados; a resposta 503 antes do
-   deploy é esperada. O endpoint é público, sem allowlist de IPs de escritório.
-   Definir `EXPO_PUBLIC_API_URL=https://mavipay.consig1.com.br` no ambiente de
-   publicação do app Expo; builds já publicados não são atualizados pelo NGINX.
-4. Conferir a porta 7920 e executar o job MaviPay em janela acompanhada. Verificar
-   health check, migrations e os fluxos de cadastro/login antes da liberação.
+[Build #3](https://jenkins.consig1.com.br/job/mavipay%20-%20build%20and%20deploy/3/)
+concluído com SUCCESS. Verificações realizadas sem criar usuários ou enviar mensagens:
+
+- `GET /actuator/health`: HTTPS 200, status UP.
+- `GET /api/v1/users/me` sem token: 401.
+- Preflight CORS: 200 com os métodos esperados.
+- Flyway: 20 migrations com success=true, última versão V20.
+- Container `MaisCashApiMobile`: imagem `maiscashapimobile:3`, bind apenas em
+  `127.0.0.1:7920` para a porta interna 8080.
+
+Próximos testes exigem usuário/destinatário autorizado: cadastro WhatsApp, emissão
+e validação do código, login e consulta de margem. SMTP não bloqueia esse roteiro;
+o canal alternativo por e-mail permanece indisponível. Não foram validadas ofertas
+bancárias reais nem efetuados envios ChatGuru durante o provisionamento.
+
+Definir `EXPO_PUBLIC_API_URL=https://mavipay.consig1.com.br` no ambiente de publicação
+do app Expo; a configuração do NGINX não atualiza builds móveis já publicados.
+Atualizações de Secret file requerem build manual/recriação do container.
 
 ## HTTPS da API
 
@@ -88,8 +111,8 @@ existente `snap.certbot.renew.timer` e hook de reload do NGINX. A simulação
 A configuração `infra/nginx/conf.d/mavipay.conf` pertence ao repositório DevOps.
 O proxy encaminha para `127.0.0.1:7920` e converte falhas de conexão 502/504 em
 HTTP 503 com JSON `{"status":"unavailable"}`. Isso não indica saúde do backend:
-a API ainda precisa ser implantada, e `/actuator/health` deve passar a refletir
-seu estado real após o primeiro deploy.
+essa resposta é esperada somente quando o upstream estiver indisponível. Após
+o primeiro deploy, `/actuator/health` passou a retornar HTTP 200/UP.
 
 A configuração aplicada e o manual `infra/nginx/MAVIPAY.md` estão no submódulo
 DevOps, incorporados pela [PR #6](https://github.com/MaisCashTech/devops/pull/6)
