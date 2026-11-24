@@ -13,7 +13,7 @@ de cada componente.
 | Credenciais Jenkins | `redis-password` e `maiscash-api-mobile-env` cadastradas |
 | Backend MaviPay | Job criado; nenhum deploy disparado durante este provisionamento |
 | WhatsApp/ChatGuru e SMTP | Valores reais de produção pendentes |
-| HTTPS da API | Domínio, configuração NGINX e certificado pendentes |
+| HTTPS da API | `https://mavipay.consig1.com.br`, certificado e proxy NGINX configurados; HTTP 503 até o backend estar disponível |
 
 ## Jobs Jenkins
 
@@ -69,11 +69,31 @@ chaves AES/HMAC após entrada de dados; substituí-las afeta os CPFs já armazen
    primeiro Flyway deve criar o histórico e as tabelas, sem aplicação manual dos SQLs.
 2. Completar as credenciais reais de ChatGuru/WhatsApp e SMTP e validar o envio
    utilizado por cadastro e autenticação.
-3. Definir o domínio HTTPS, criar proxy para `127.0.0.1:7920` e emitir certificado.
-   A API atende clientes móveis de diversas redes: não copiar a allowlist do
-   escritório para o endpoint público da aplicação.
+3. Confirmar o acesso a `https://mavipay.consig1.com.br`. O proxy para
+   `127.0.0.1:7920` e o certificado já estão configurados; a resposta 503 antes do
+   deploy é esperada. O endpoint é público, sem allowlist de IPs de escritório.
+   Definir `EXPO_PUBLIC_API_URL=https://mavipay.consig1.com.br` no ambiente de
+   publicação do app Expo; builds já publicados não são atualizados pelo NGINX.
 4. Conferir a porta 7920 e executar o job MaviPay em janela acompanhada. Verificar
    health check, migrations e os fluxos de cadastro/login antes da liberação.
+
+## HTTPS da API
+
+O DNS A `mavipay.consig1.com.br` aponta para `193.123.104.25` (`mct-main`).
+HTTP redireciona para HTTPS. O certificado Let's Encrypt foi emitido com validade
+inicial até 22/02/2027. A renovação utiliza webroot `/var/lib/letsencrypt`, o timer
+existente `snap.certbot.renew.timer` e hook de reload do NGINX. A simulação
+`certbot renew --cert-name mavipay.consig1.com.br --dry-run` passou.
+
+A configuração `infra/nginx/conf.d/mavipay.conf` pertence ao repositório DevOps.
+O proxy encaminha para `127.0.0.1:7920` e converte falhas de conexão 502/504 em
+HTTP 503 com JSON `{"status":"unavailable"}`. Isso não indica saúde do backend:
+a API ainda precisa ser implantada, e `/actuator/health` deve passar a refletir
+seu estado real após o primeiro deploy.
+
+A configuração aplicada e o manual `infra/nginx/MAVIPAY.md` estão na
+[PR DevOps #6](https://github.com/MaisCashTech/devops/pull/6), para revisão.
+Não é necessário NGINX ou certificado para o Redis, que continua interno.
 
 ## Operação do Redis
 

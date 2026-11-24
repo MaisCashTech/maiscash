@@ -13,8 +13,9 @@ componentes se conectam e onde encontrar seus procedimentos.
 | [Operação MaviPay e Redis](mavipay-redis-operations.md) | Recursos provisionados, jobs Jenkins, IDs de credenciais, primeiro deploy, persistência, backup e rotação |
 
 O MaviPay possui base PostgreSQL e Redis provisionados, mas o backend ainda não
-foi implantado. Credenciais reais de WhatsApp/SMTP e publicação HTTPS permanecem
-pendentes. O guia de operação registra o estado verificado e as evidências dos
+foi implantado. O domínio `https://mavipay.consig1.com.br` já tem certificado e
+proxy configurados; responde 503 até o backend estar disponível. Credenciais
+reais de WhatsApp/SMTP permanecem pendentes. O guia de operação registra o estado verificado e as evidências dos
 builds Redis, sem expor senhas ou chaves.
 
 ## Autorização e segurança

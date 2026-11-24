@@ -21,7 +21,7 @@ o backend; a publicação do aplicativo móvel utiliza EAS e é um processo sepa
 
 ```mermaid
 flowchart LR
-    App[App MaviPay / Expo] --> HTTPS[Endpoint HTTPS do backend — pendente]
+    App[App MaviPay / Expo] --> HTTPS[mavipay.consig1.com.br / HTTPS]
     HTTPS --> API[api-mobile / MaisCashApiMobile]
     API --> PG[(PostgreSQL / base mavipay)]
     API --> Redis[(Redis / redis:6379)]
@@ -30,8 +30,9 @@ flowchart LR
 ```
 
 O diagrama representa a integração prevista. O PostgreSQL e o Redis já estão
-provisionados; o backend ainda não foi implantado e sua publicação HTTPS e as
-credenciais de mensagem continuam pendentes.
+provisionados; o proxy HTTPS de `mavipay.consig1.com.br` também está configurado.
+O backend ainda não foi implantado e as credenciais de mensagem continuam
+pendentes. O domínio responde HTTP 503 enquanto a API estiver indisponível.
 
 | Componente | Integração em produção |
 |---|---|
