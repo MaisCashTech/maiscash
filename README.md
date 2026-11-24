@@ -73,8 +73,9 @@ O submódulo [`services/mavipay`](https://github.com/MaisCashTech/mavipay) cont�
   `maiscash-api-mobile-env` e `redis-password` estão cadastradas no Jenkins.
 - Redis tem instalação dedicada em `infra/redis`, descrita abaixo. WhatsApp/SMTP
   ainda precisam de credenciais reais no Secret file antes de validar o login.
-- A API usa `127.0.0.1:7920` no host; a publicação HTTPS requer a definição do
-  domínio e certificado no NGINX. Instalar Redis não dispara o deploy do backend.
+- API pública: `https://mavipay.consig1.com.br`, com HTTPS e proxy NGINX para
+  `127.0.0.1:7920`. Enquanto o backend não estiver implantado, responde HTTP 503.
+  Instalar Redis ou publicar o domínio não dispara o deploy do backend.
 
 ### Redis
 

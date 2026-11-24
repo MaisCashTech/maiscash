@@ -7,8 +7,8 @@ submódulos necessários após atualizar o checkout:
 git submodule update --init --recursive services/mavipay
 ```
 
-`infra/redis` é adicionado pela [PR #6](https://github.com/MaisCashTech/maiscash/pull/6).
-Depois de integrá-la, inicialize-o com `git submodule update --init infra/redis`.
+`infra/redis` já integra o workspace; inicialize-o com
+`git submodule update --init infra/redis`.
 Não é necessário executar seu Jenkinsfile para desenvolver localmente.
 
 ## MaviPay: backend
