@@ -30,12 +30,19 @@ e webhook de push para `https://jenkins.consig1.com.br/github-webhook/`, com TLS
 verificado e ping entregue com HTTP 200. O job foi restaurado para `*/main` após
 o primeiro deploy. Não há cron; novos commits na main são detectados pelo SCM.
 
-A [PR MaviPay #26](https://github.com/MaisCashTech/mavipay/pull/26) versiona o
-trigger e corrige a variável opcional `EXTRA_NETWORK` omitida pelo Jenkins quando
-vazia. O deploy inicial bem-sucedido usou a branch dessa correção (commit
-`9be8b9c`); mesclar a PR antes dos próximos deploys da main. O build #1 compilou,
-mas abortou antes de criar container pela variável ausente; o #2 falhou ao buscar
-um SHA com checkout lightweight. O #3 aplicou as migrations e passou no health.
+A [PR MaviPay #26](https://github.com/MaisCashTech/mavipay/pull/26) foi mesclada
+na main (`ea94089`) e está incluída no ponteiro do monorepo. Versiona o trigger e
+corrige a variável opcional `EXTRA_NETWORK` omitida pelo Jenkins quando vazia.
+O primeiro deploy bem-sucedido usou o commit `9be8b9c` da branch dessa correção.
+
+No merge, o GitHub entregou o push a partir de novas redes e recebeu 403 do NGINX.
+Após conferir o campo `hooks` na API Meta oficial do GitHub, as redes foram
+atualizadas e a entrega de push reenviada passou a retornar HTTP 200. O Jenkins
+registrou o evento e executou polling. O checkout definitivo da main foi executado manualmente após a validação inicial
+na branch da correção: [build #4](https://jenkins.consig1.com.br/job/mavipay%20-%20build%20and%20deploy/4/)
+concluído com SUCCESS, imagem `maiscashapimobile:4` e health HTTPS 200/UP.
+A configuração aplicada está na [PR DevOps #7](https://github.com/MaisCashTech/devops/pull/7),
+para revisão. O ping inicial havia passado: validar também pushes e suas origens.
 
 O webhook não aguarda GitHub Actions: gates devem estar na proteção de branch.
 Instalar Redis não dispara o job do backend. O app Expo tem publicação separada via EAS.

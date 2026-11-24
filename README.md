@@ -77,7 +77,7 @@ O submódulo [`services/mavipay`](https://github.com/MaisCashTech/mavipay) cont�
 - API pública: `https://mavipay.consig1.com.br`, com HTTPS e proxy NGINX para
   `127.0.0.1:7920`. Primeiro deploy concluído: `/actuator/health` retorna 200/UP.
   O job acompanha `main` por webhook GitHub; a correção e o gatilho versionado
-  estão na [PR MaviPay #26](https://github.com/MaisCashTech/mavipay/pull/26).
+  foram mesclados na [PR MaviPay #26](https://github.com/MaisCashTech/mavipay/pull/26).
 
 ### Redis
 
