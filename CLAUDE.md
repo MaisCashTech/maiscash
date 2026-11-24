@@ -1,3 +1,16 @@
+# Política de merge — MaisCashTech/maiscash
+
+Orientação explícita do usuário, registrada em 24/11/2026:
+
+- Ao trabalhar neste repositório, mesclar as PRs após revisar o conteúdo, resolver
+  conflitos e concluir as verificações aplicáveis, sem solicitar nova confirmação
+  nem deixá-las aguardando revisão manual do usuário.
+- Preferir merge commit para preservar os commits referenciados pelos submódulos.
+- Respeitar as proteções de branch e os checks obrigatórios do GitHub; corrigir
+  falhas antes de mesclar e informar bloqueios que dependam de ação externa.
+- Esta autorização permanente se aplica a `MaisCashTech/maiscash`. Para os
+  repositórios dos submódulos, seguir a autorização específica da tarefa.
+- Verificar ao concluir que as PRs abrangidas pela tarefa foram mescladas.
 
 # 🚨 ABSOLUTE PRIORITY: NO COMPATIBILITY CODE ALLOWED 🚨
 
