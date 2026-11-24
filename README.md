@@ -71,11 +71,13 @@ O submódulo [`services/mavipay`](https://github.com/MaisCashTech/mavipay) cont�
   execute o backend nesta subpasta ou use o job dedicado.
 - A base PostgreSQL `mavipay` está provisionada no `mct-main`. As credenciais
   `maiscash-api-mobile-env` e `redis-password` estão cadastradas no Jenkins.
-- Redis tem instalação dedicada em `infra/redis`, descrita abaixo. WhatsApp/SMTP
-  ainda precisam de credenciais reais no Secret file antes de validar o login.
+- Redis tem instalação dedicada em `infra/redis`, descrita abaixo. ChatGuru
+  já possui credenciais cadastradas; SMTP é opcional para o fluxo WhatsApp
+  e permanece pendente para o canal alternativo por e-mail.
 - API pública: `https://mavipay.consig1.com.br`, com HTTPS e proxy NGINX para
-  `127.0.0.1:7920`. Enquanto o backend não estiver implantado, responde HTTP 503.
-  Instalar Redis ou publicar o domínio não dispara o deploy do backend.
+  `127.0.0.1:7920`. Primeiro deploy concluído: `/actuator/health` retorna 200/UP.
+  O job acompanha `main` por webhook GitHub; a correção e o gatilho versionado
+  estão na [PR MaviPay #26](https://github.com/MaisCashTech/mavipay/pull/26).
 
 ### Redis
 

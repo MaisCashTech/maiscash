@@ -29,23 +29,23 @@ flowchart LR
     API --> Msg[WhatsApp ChatGuru / e-mail]
 ```
 
-O diagrama representa a integração prevista. O PostgreSQL e o Redis já estão
-provisionados; o proxy HTTPS de `mavipay.consig1.com.br` também está configurado.
-O backend ainda não foi implantado e as credenciais de mensagem continuam
-pendentes. O domínio responde HTTP 503 enquanto a API estiver indisponível.
+O backend está implantado em `mavipay.consig1.com.br`, com health check 200/UP,
+PostgreSQL e Redis acessíveis. ChatGuru está configurado, mas o envio real e os
+fluxos de negócio ainda precisam ser testados com destinatário autorizado. SMTP
+permanece sem credenciais, afetando somente o canal alternativo por e-mail.
 
 | Componente | Integração em produção |
 |---|---|
-| API | Container previsto `MaisCashApiMobile`, rede Docker `consig1`; bind `127.0.0.1:7920` → `8080` |
+| API | Container `MaisCashApiMobile`, rede Docker `consig1`; bind `127.0.0.1:7920` → `8080` |
 | PostgreSQL | Servidor existente no `mct-main`, base exclusiva `mavipay`, role `mavipay_app`; gateway da rede `consig1` em `172.19.0.1:5432` |
 | Redis | Container `redis`, rede `consig1`, porta interna `6379`, sem publicação no host |
 | MaisCashPro | `CONSIG_API_URL=http://maiscashpro-app-1:8080`, na mesma rede Docker |
-| Mensagens | ChatGuru/WhatsApp e SMTP; credenciais reais ainda pendentes |
+| Mensagens | ChatGuru configurado; SMTP pendente para o canal alternativo por e-mail |
 
 A base é criada administrativamente; as tabelas são gerenciadas pelas migrations
 Flyway em `api-mobile/src/main/resources/db/migration/`. A versão inspecionada
-contém V1–V20, validadas como `mavipay_app` em transação com rollback no PostgreSQL
-13.23 de produção. A base permaneceu sem tabelas para o primeiro Flyway.
+contém V1–V20, aplicadas com sucesso no primeiro deploy pelo Flyway no PostgreSQL
+13.23. O histórico registra 20 migrations bem-sucedidas.
 
 ## Papel do Redis
 
