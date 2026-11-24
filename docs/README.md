@@ -1,25 +1,41 @@
-# Documentacao Tecnica - MaisCash
+# Documentação técnica — MaisCash
 
-Indice de documentacao tecnica do projeto MaisCash.
+Guias de integração e operação do workspace MaisCashTech. As configurações
+executáveis ficam nos repositórios dos serviços; este diretório explica como os
+componentes se conectam e onde encontrar seus procedimentos.
 
----
+## Arquitetura, desenvolvimento e operação
 
-## Autorizacao e Seguranca
+| Documento | Conteúdo |
+|---|---|
+| [Arquitetura](architecture.md) | Organização dos submódulos, dependências MaviPay/PostgreSQL/Redis, rede Docker e separação dos pipelines |
+| [Setup de desenvolvimento](development-setup.md) | JDK 21 do MaviPay, PostgreSQL/Redis locais, variáveis de ambiente e testes |
+| [Operação MaviPay e Redis](mavipay-redis-operations.md) | Recursos provisionados, jobs Jenkins, IDs de credenciais, primeiro deploy, persistência, backup e rotação |
 
-| Documento | Descricao |
-|-----------|-----------|
-| [emprestimos-authorization.md](./emprestimos-authorization.md) | Fluxo de autorizacao por papel (ADM / SUPERVISOR / OPERADOR) no menu de emprestimos. Inclui a logica de determinacao de papel no frontend, a verificacao de seguranca no backend e o historico de correcoes do Issue #38. |
+O MaviPay possui base PostgreSQL e Redis provisionados, mas o backend ainda não
+foi implantado. Credenciais reais de WhatsApp/SMTP e publicação HTTPS permanecem
+pendentes. O guia de operação registra o estado verificado e as evidências dos
+builds Redis, sem expor senhas ou chaves.
 
----
+## Autorização e segurança
 
-## Documentacao de Fluxos (ai_docs)
+| Documento | Conteúdo |
+|---|---|
+| [Autorização de empréstimos](emprestimos-authorization.md) | Papéis ADM/SUPERVISOR/OPERADOR, verificações frontend/backend e correções do Issue #38 |
 
-Documentacao de integracao e fluxos de dados disponivel em `ai_docs/`:
+## Fluxos de dados
 
-| Documento | Descricao |
-|-----------|-----------|
-| [ai_docs/flows/extrato-flow.md](../ai_docs/flows/extrato-flow.md) | Fluxo completo de consulta de extratos de emprestimos consignados do GovBahia, desde o input do CPF ate a persistencia nos bancos de dados. |
+| Documento | Conteúdo |
+|---|---|
+| [Fluxo do Extrato](../ai_docs/flows/extrato-flow.md) | Consulta de empréstimos GovBahia, coleta, persistência e sincronização |
 
----
+## Manuais dos componentes
 
-*Ultima atualizacao: 2026-03-13*
+| Componente | Fonte |
+|---|---|
+| MaviPay | [Deploy](https://github.com/MaisCashTech/mavipay/blob/main/docs/DEPLOY.md) e [banco PostgreSQL](https://github.com/MaisCashTech/mavipay/blob/main/docs/DATABASE-PROVISIONING.md) |
+| Redis | [Instalação via Jenkins e operação](https://github.com/MaisCashTech/redis/blob/main/README.md) |
+| Infraestrutura existente | [DevOps](../infra/devops/README.md) |
+
+Ao alterar banco, rede, credenciais ou pipelines, atualizar também este índice e o
+guia de operação correspondente. Nunca incluir valores secretos em documentação.
