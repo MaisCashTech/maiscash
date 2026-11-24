@@ -52,3 +52,6 @@
 [submodule "services/mavipay"]
 	path = services/mavipay
 	url = git@github.com:MaisCashTech/mavipay.git
+[submodule "infra/redis"]
+	path = infra/redis
+	url = git@github.com:MaisCashTech/redis.git

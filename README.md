@@ -69,15 +69,35 @@ O submódulo [`services/mavipay`](https://github.com/MaisCashTech/mavipay) cont�
 - Desenvolvimento: `cd services/mavipay/api-mobile && ./mvnw test` (JDK 21).
 - Os scripts genéricos do workspace procuram Maven na raiz de cada serviço;
   execute o backend nesta subpasta ou use o job dedicado.
-- Antes do primeiro deploy, cadastrar `maiscash-api-mobile-env` no Jenkins e
-  disponibilizar PostgreSQL/Redis. A API usa `127.0.0.1:7920` no host; a publicação
-  HTTPS requer a definição do domínio e certificado no NGINX.
+- A base PostgreSQL `mavipay` está provisionada no `mct-main`. As credenciais
+  `maiscash-api-mobile-env` e `redis-password` estão cadastradas no Jenkins.
+- Redis tem instalação dedicada em `infra/redis`, descrita abaixo. WhatsApp/SMTP
+  ainda precisam de credenciais reais no Secret file antes de validar o login.
+- A API usa `127.0.0.1:7920` no host; a publicação HTTPS requer a definição do
+  domínio e certificado no NGINX. Instalar Redis não dispara o deploy do backend.
+
+### Redis
+
+O submódulo [`infra/redis`](https://github.com/MaisCashTech/redis) contém apenas
+`README.md` e `Jenkinsfile`. A instalação é executada pelo job
+[redis - install and deploy](https://jenkins.consig1.com.br/job/redis%20-%20install%20and%20deploy/)
+no agente `built-in` do Jenkins MaisCashTech.
+
+- Container `redis`, rede interna `consig1`, porta 6379 sem publicação no host.
+- Senha na credencial Secret text `redis-password`, compartilhada com a variável
+  `REDIS_PASSWORD` do Secret file `maiscash-api-mobile-env`.
+- Dados no volume Docker `maiscash_redis_data`, com AOF e autenticação obrigatória.
+- Versão da imagem fixada por digest; validação de saúde e recuperação do container
+  anterior em falhas de instalação. Builds manuais e serializados.
+- Manual de instalação, limites, backup e rotação: `infra/redis/README.md`.
+- Redis atende inicialmente ao MaviPay; não altera os serviços existentes.
 
 ## 🔧 Tecnologias
 
 - **Backend**: Java 17, Spring Boot, JHipster, Apache Artemis
 - **Frontend**: Angular 18, TypeScript, Material Design
 - **Database**: PostgreSQL
+- **Redis**: autenticação temporária, limites de tentativas e cache do MaviPay
 - **Build**: Maven, npm
 - **Containers**: Docker, Docker Compose
 
